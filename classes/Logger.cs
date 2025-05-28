@@ -27,4 +27,14 @@ public static class Logger
             Console.WriteLine(str);
         return sb.ToString();
     }
+
+    public static string DisplayWarning(string messageContent)
+    {
+        return DisplayMessage(messageContent, MesssageType.WARNING);
+    }
+
+    public static string DisplayError(string messageContent)
+    {
+        return DisplayMessage(messageContent, MesssageType.ERROR);
+    }
 }
