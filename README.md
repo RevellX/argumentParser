@@ -37,3 +37,26 @@ Accepted -action values:
 ```bash
 program.exe -action [algorithm]
 ```
+
+---
+
+## 🔧 How to Build
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/yourusername/algorithm-cli.git
+cd algorithm-cli
+```
+
+2. Build the project:
+
+```bash
+dotnet build
+```
+
+3. Run with arguments:
+
+```bash
+dotnet run -- -action fibonacci
+```
