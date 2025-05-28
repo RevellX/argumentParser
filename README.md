@@ -58,5 +58,5 @@ dotnet build
 3. Run with arguments:
 
 ```bash
-dotnet run -- -action fibonacci
+dotnet run -action fibonacci
 ```
