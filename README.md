@@ -45,8 +45,8 @@ program.exe -action [algorithm]
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/algorithm-cli.git
-cd algorithm-cli
+git clone https://github.com/RevellX/argumentParser.git
+cd argumentParser
 ```
 
 2. Build the project:
