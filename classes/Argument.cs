@@ -31,4 +31,14 @@ public class Argument
     {
         return _stringValue;
     }
+
+    public bool IsFlag()
+    {
+        return _type == ArgumentType.FLAG ? true : false;
+    }
+
+    public bool IsArgument()
+    {
+        return _type == ArgumentType.ARGUMENT ? true : false;
+    }
 }
