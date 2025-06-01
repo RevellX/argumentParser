@@ -4,7 +4,7 @@ namespace argumentParser.Classes;
 
 public static class Logger
 {
-    public static string DisplayMessage(string messageContent, MesssageType messageType = MesssageType.INFO, bool dontDisplay = false)
+    public static string DisplayMessage(string? messageContent, MesssageType messageType = MesssageType.INFO, bool dontDisplay = false)
     {
         var sb = new StringBuilder();
         sb.Append("[");
@@ -21,7 +21,7 @@ public static class Logger
                 break;
         }
         sb.Append("]: ");
-        sb.Append(messageContent);
+        sb.Append(messageContent ?? "");
         var str = sb.ToString();
         if (!dontDisplay)
             Console.WriteLine(str);
