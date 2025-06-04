@@ -30,10 +30,56 @@ class MyList<T>
 
     public void RemoveAt(int index)
     {
+        // If the list is empty or index is out of range, throw an exception
         if (index < 0 || index >= _count)
         {
             throw new ArgumentOutOfRangeException(nameof(index), "Index is out of range.");
         }
+        // Start with the head of the list
+        Node<T>? current = _head;
+        // Traverse to the node at the specified index
+        for (int i = 0; i < index; i++)
+        {
+            if (current == null)
+            {
+                throw new InvalidOperationException("List is shorter than expected.");
+            }
+            current = current.next;
+        }
+
+        Logger.DisplayMessage($"Removing item at index {index}: {current?.value?.ToString() ?? "null"}");
+        Logger.DisplayMessage($"Next item: {current.next?.value?.ToString() ?? "null"}");
+        Logger.DisplayMessage($"Previous item: {current.previous?.value?.ToString() ?? "null"}");
+        // Check if current element is head, tails or somewhere in the middle
+        if (current == _head)
+        {
+            Logger.DisplayMessage("Removing head");
+            if (_head == _tail)
+            {
+                // If there's only one item in the list
+                _head = null;
+                _tail = null;
+            }
+            else
+            {
+                _head = current.next;
+                _head!.previous = null;
+            }
+        }
+        else if (current == _tail)
+        {
+            Logger.DisplayMessage("Removing tail");
+            _tail = current.previous;
+            _tail!.next = null;
+
+        }
+        else
+        {
+            Logger.DisplayMessage("Removing middle item");
+            current!.next!.previous = current.previous;
+            current!.previous!.next = current.next;
+        }
+
     }
 
     public void DisplayItems()
