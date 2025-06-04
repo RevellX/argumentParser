@@ -47,13 +47,9 @@ class MyList<T>
             current = current.next;
         }
 
-        Logger.DisplayMessage($"Removing item at index {index}: {current?.value?.ToString() ?? "null"}");
-        Logger.DisplayMessage($"Next item: {current.next?.value?.ToString() ?? "null"}");
-        Logger.DisplayMessage($"Previous item: {current.previous?.value?.ToString() ?? "null"}");
         // Check if current element is head, tails or somewhere in the middle
         if (current == _head)
         {
-            Logger.DisplayMessage("Removing head");
             if (_head == _tail)
             {
                 // If there's only one item in the list
@@ -62,20 +58,18 @@ class MyList<T>
             }
             else
             {
-                _head = current.next;
+                _head = current!.next;
                 _head!.previous = null;
             }
         }
         else if (current == _tail)
         {
-            Logger.DisplayMessage("Removing tail");
-            _tail = current.previous;
+            _tail = current!.previous;
             _tail!.next = null;
 
         }
         else
         {
-            Logger.DisplayMessage("Removing middle item");
             current!.next!.previous = current.previous;
             current!.previous!.next = current.next;
         }
