@@ -162,6 +162,7 @@ class Fibonacci : IActionable
         string returnDescription =
             "Calculates the nth element of the Fibonacci sequence or returns the first n elements of the Fibonacci sequence.\n " +
             " Usage: -mode [nthElement|sequence] -n [number]\n" +
+            "  optional: -clearOutput : outputs just the numbers without any description\n" +
             "If no arguments are provided, the user will be prompted to choose the mode and input the number.";
 
         return returnDescription;

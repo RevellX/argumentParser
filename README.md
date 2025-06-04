@@ -31,11 +31,13 @@ Here is a list of currently included and planned algorithms:
 Accepted -action values:
 
 - fibonacci
+- multithreading
 
 ### 🧾 Syntax
 
 ```bash
 program.exe -action [algorithm]
+program.exe -action [algorithm] -[algorith specific arguments and flags]
 ```
 
 ---
