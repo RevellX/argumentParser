@@ -56,14 +56,14 @@ public sealed class ArgumentParser
             }
         }
     }
-    public static bool TryGet(string key, out Argument returnResult)
+    public static bool TryGet(string key, out Argument? returnResult)
     {
         if (_args.TryGetValue(key, out var result))
         {
             returnResult = result;
             return true;
         }
-        returnResult = null!;
+        returnResult = null;
         return false;
     }
 
