@@ -1,57 +1,139 @@
 namespace argumentParser.Classes.Actions;
 
-public static class Fibonacci
+enum FibonacciMode
 {
-    public static void Run()
-    {
+    NthElement,
+    Sequence,
+    AskUser
+}
 
-        int n;
-        string? userInput;
-        while (true)
+class Fibonacci : IActionable
+{
+    private FibonacciMode _mode;
+    private int _n;
+
+    public Fibonacci()
+    {
+        _mode = FibonacciMode.AskUser;
+        _n = 0;
+
+        if (ArgumentParser.TryGet("mode", out Argument? modeArg) && modeArg!.IsArgument())
         {
-            Console.Clear();
-            Logger.DisplayMessage("Would you like to get nth-element of Fibonacci sequence or array of numbers?");
-            Logger.DisplayMessage("1 - nth-element");
-            Logger.DisplayMessage("2 - sequence");
-            userInput = Console.ReadLine();
-            if (int.TryParse(userInput, out n) && (n == 1 || n == 2))
-                break;
-            Logger.DisplayMessage("Choose option 1 or 2. Press any key to continue...");
-            Console.ReadKey();
+            if (modeArg.GetValue() == "nthElement")
+            {
+                _mode = FibonacciMode.NthElement;
+            }
+            else if (modeArg.GetValue() == "sequence")
+            {
+                _mode = FibonacciMode.Sequence;
+            }
+        }
+        else
+        {
+            _mode = FibonacciMode.AskUser;
         }
 
-        switch (n)
+        if (ArgumentParser.TryGet("n", out Argument? nArg) && nArg!.IsArgument())
         {
-            case 1:
-                while (true)
+            if (int.TryParse(nArg.GetValue(), out int n))
+            {
+                _n = n;
+            }
+            else
+            {
+                _n = 0;
+            }
+        }
+    }
+
+    public void Run()
+    {
+        string? userInput;
+
+        if (_mode == FibonacciMode.AskUser)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Logger.DisplayMessage("Would you like to get nth-element of Fibonacci sequence or array of numbers?");
+                Logger.DisplayMessage("1 - nth-element");
+                Logger.DisplayMessage("2 - sequence");
+                userInput = Console.ReadLine();
+                int n;
+                if (int.TryParse(userInput, out n) && (n == 1 || n == 2))
                 {
-                    Console.Clear();
-                    Logger.DisplayMessage("Which (minimum 3rd) element of fibonacci sequence would you like to get? ");
-                    userInput = Console.ReadLine();
-                    if (int.TryParse(userInput, out n) && n >= 3)
-                        break;
-                    Logger.DisplayMessage("Please enter a valid greater than 2 integer. Press any key to continue...");
-                    Console.ReadKey();
+                    if (n == 1) _mode = FibonacciMode.NthElement;
+                    else if (n == 2) _mode = FibonacciMode.Sequence;
+                    break;
                 }
-                Console.WriteLine(NthFibonacci(n - 3));
+                Logger.DisplayMessage("Choose option 1 or 2. Press any key to continue...");
+                Console.ReadKey();
+            }
+        }
+
+        if (_n == 0)
+        {
+            switch (_mode)
+            {
+                case FibonacciMode.NthElement:
+                    while (true)
+                    {
+                        Console.Clear();
+                        Logger.DisplayMessage("Which (minimum 3rd) element of fibonacci sequence would you like to get? ");
+                        userInput = Console.ReadLine();
+                        int n;
+                        if (int.TryParse(userInput, out n) && n >= 3)
+                        {
+                            _n = n;
+                            break;
+                        }
+                        Logger.DisplayMessage("Please enter a valid greater than 2 integer. Press any key to continue...");
+                        Console.ReadKey();
+                    }
+                    break;
+
+                case FibonacciMode.Sequence:
+                    while (true)
+                    {
+                        Console.Clear();
+                        Logger.DisplayMessage("How many elements of fibonacci sequence would you like to get? ");
+                        userInput = Console.ReadLine();
+                        int n;
+                        if (int.TryParse(userInput, out n) && n >= 3)
+                        {
+                            _n = n;
+                            break;
+                        }
+                        Logger.DisplayMessage("Please enter a valid positive integer. Press any key to continue...");
+                        Console.ReadKey();
+                    }
+
+                    break;
+            }
+        }
+
+        switch (_mode)
+        {
+            case FibonacciMode.NthElement:
+                if (ArgumentParser.Has("clearOutput"))
+                {
+                    Console.WriteLine(NthFibonacci(_n - 3));
+                }
+                else
+                {
+                    Logger.DisplayMessage($"The {_n}th element of the Fibonacci sequence is: {NthFibonacci(_n - 3)}");
+                }
                 break;
 
-            case 2:
-                while (true)
+            case FibonacciMode.Sequence:
+                if (ArgumentParser.Has("clearOutput"))
                 {
-                    Console.Clear();
-                    Logger.DisplayMessage("How many elements of fibonacci sequence would you like to get? ");
-                    userInput = Console.ReadLine();
-                    if (int.TryParse(userInput, out n) && n >= 3)
-                        break;
-                    Logger.DisplayMessage("Please enter a valid positive integer. Press any key to continue...");
-                    Console.ReadKey();
+                    Console.WriteLine(FibonacciSequenceN(_n - 3));
                 }
-                Console.WriteLine(FibonacciSequenceN(n));
-                break;
-
-            default:
-                Logger.DisplayMessage(Messages.OPTION_UNKNOW, MesssageType.ERROR);
+                else
+                {
+                    Logger.DisplayMessage($"The first {_n} elements of the Fibonacci sequence are: {FibonacciSequenceN(_n)}");
+                }
                 break;
         }
 
@@ -68,5 +150,20 @@ public static class Fibonacci
     public static int[] FibonacciSequenceN(int n)
     {
         return [];
+    }
+
+    public string GetName()
+    {
+        return "Fibonacci";
+    }
+
+    public string GetDescription()
+    {
+        string returnDescription =
+            "Calculates the nth element of the Fibonacci sequence or returns the first n elements of the Fibonacci sequence.\n " +
+            " Usage: -mode [nthElement|sequence] -n [number]\n" +
+            "If no arguments are provided, the user will be prompted to choose the mode and input the number.";
+
+        return returnDescription;
     }
 }
