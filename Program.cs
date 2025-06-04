@@ -1,6 +1,5 @@
 ﻿using argumentParser.Classes;
 using argumentParser.Classes.Actions;
-using argumentParser.Classes.Utils;
 
 namespace argumentParser;
 
@@ -19,7 +18,10 @@ public class Program
             switch (switchArg?.GetValue())
             {
                 case "fibonacci":
-                    Fibonacci.Run();
+                    new Fibonacci().Run();
+                    break;
+                case "multithreading":
+                    new Multithreading().Run();
                     break;
                 case "test":
                     TestMethod();
@@ -38,12 +40,8 @@ public class Program
     private static void TestMethod()
     {
 
-        MyList<string> list = new MyList<string>();
-        list.Add("Hello");
-        list.Add("Good bye");
 
-        list.DisplayItems();
-
+        // Uncomment the following lines to test the ArgumentParser functionali
         // if (ArgumentParser.TryGet("fish", out Argument arg) && arg.IsArgument())
         // {
         //     Logger.DisplayMessage($"Fish: {arg.GetValue()}");
