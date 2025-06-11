@@ -9,14 +9,12 @@ enum FibonacciMode
 
 class Fibonacci : IActionable
 {
-    private FibonacciMode _mode;
-    private int _n;
+    private FibonacciMode _mode = FibonacciMode.AskUser;
+    private bool _clearOutput = false;
+    private int _n = -1;
 
     public Fibonacci()
     {
-        _mode = FibonacciMode.AskUser;
-        _n = 0;
-
         if (ArgumentParser.TryGet("mode", out Argument? modeArg) && modeArg!.IsArgument())
         {
             if (modeArg.GetValue() == "nthElement")
@@ -28,21 +26,18 @@ class Fibonacci : IActionable
                 _mode = FibonacciMode.Sequence;
             }
         }
-        else
-        {
-            _mode = FibonacciMode.AskUser;
-        }
 
         if (ArgumentParser.TryGet("n", out Argument? nArg) && nArg!.IsArgument())
         {
-            if (int.TryParse(nArg.GetValue(), out int n))
+            if (int.TryParse(nArg.GetValue(), out int n) && n >= 3)
             {
                 _n = n;
             }
-            else
-            {
-                _n = 0;
-            }
+        }
+
+        if (ArgumentParser.TryGet("clearOutput", out Argument? overwriteArg))
+        {
+            _clearOutput = true;
         }
     }
 
@@ -71,7 +66,7 @@ class Fibonacci : IActionable
             }
         }
 
-        if (_n == 0)
+        if (_n == -1)
         {
             switch (_mode)
             {
@@ -99,7 +94,7 @@ class Fibonacci : IActionable
                         Logger.DisplayMessage("How many elements of fibonacci sequence would you like to get? ");
                         userInput = Console.ReadLine();
                         int n;
-                        if (int.TryParse(userInput, out n) && n >= 3)
+                        if (int.TryParse(userInput, out n) && n >= 0)
                         {
                             _n = n;
                             break;
@@ -115,41 +110,52 @@ class Fibonacci : IActionable
         switch (_mode)
         {
             case FibonacciMode.NthElement:
-                if (ArgumentParser.Has("clearOutput"))
-                {
+                if (_clearOutput)
                     Console.WriteLine(NthFibonacci(_n - 3));
-                }
                 else
-                {
                     Logger.DisplayMessage($"The {_n}th element of the Fibonacci sequence is: {NthFibonacci(_n - 3)}");
-                }
                 break;
 
             case FibonacciMode.Sequence:
-                if (ArgumentParser.Has("clearOutput"))
-                {
-                    Console.WriteLine(FibonacciSequenceN(_n - 3));
-                }
+                if (_clearOutput)
+                    Console.WriteLine(string.Join(", ", FibonacciSequence(_n - 3)));
+
                 else
-                {
-                    Logger.DisplayMessage($"The first {_n} elements of the Fibonacci sequence are: {FibonacciSequenceN(_n)}");
-                }
+                    Logger.DisplayMessage($"The first {_n} elements of the Fibonacci sequence are: {string.Join(", ", FibonacciSequence(_n - 3))}");
                 break;
         }
 
     }
-    public static int NthFibonacci(int n, int a = 0, int b = 1)
+
+    public static int NthFibonacci(int n)
     {
-        int c = a + b;
-        if (n-- > 0)
-            return NthFibonacci(n, b, c);
-        else
-            return c;
+        if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), "n must be a non-negative integer.");
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+
+        int a = 0, b = 1, c = 0;
+        for (int i = 2; i <= n; i++)
+        {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+        return c;
     }
 
-    public static int[] FibonacciSequenceN(int n)
+    public static List<int> FibonacciSequence(int n)
     {
-        return [];
+        if (n < 0) throw new ArgumentOutOfRangeException(nameof(n), "n must be a non-negative integer.");
+        List<int> sequence = new List<int> { 0, 1 };
+        int a = 0, b = 1, c = 0;
+        for (int i = 2; i <= n; i++)
+        {
+            c = a + b;
+            a = b;
+            b = c;
+            sequence.Add(c);
+        }
+        return sequence;
     }
 
     public string GetName()
@@ -161,9 +167,9 @@ class Fibonacci : IActionable
     {
         string returnDescription =
             "Calculates the nth element of the Fibonacci sequence or returns the first n elements of the Fibonacci sequence.\n " +
-            " Usage: -mode [nthElement|sequence] -n [number]\n" +
-            "  optional: -clearOutput : outputs just the numbers without any description\n" +
-            "If no arguments are provided, the user will be prompted to choose the mode and input the number.";
+            "If no arguments are provided, the user will be prompted to choose the mode and input the number." +
+            "Example usage: -mode sequence -n 10\n" +
+            "   optional: -clearOutput : outputs just the numbers without any description\n";
 
         return returnDescription;
     }
