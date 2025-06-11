@@ -19,9 +19,9 @@ This is a simple C# console application designed for learning and practicing var
 Here is a list of currently included and planned algorithms:
 
 - ✅ Fibonacci sequence
+- ✅ Sorting (Bubble, Insertion, etc.)
 - ❌ Factorial
 - ❌ Prime number checker
-- ❌ Sorting (Bubble, Insertion, etc.)
 - ❌ Search (Linear, Binary, etc.)
 
 ---
@@ -31,7 +31,7 @@ Here is a list of currently included and planned algorithms:
 Accepted -action values:
 
 - fibonacci
-- multithreading
+- sorting
 
 ### 🧾 Syntax
 
@@ -60,5 +60,5 @@ dotnet build
 3. Run with arguments:
 
 ```bash
-dotnet run -action fibonacci
+dotnet run -action fibonacci -mode nthElement -n 20 -clearOutput
 ```
