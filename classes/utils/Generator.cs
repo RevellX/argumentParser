@@ -64,7 +64,7 @@ class Generator
         return numbers;
     }
 
-    public static List<string> GetRandomStrings(StringType type, StringCase charCase, int count, int length, bool unique = false)
+    public static List<string> GetRandomStrings(StringType stringType, StringCase charCase, int count, int length, bool unique = false)
     {
         if (count <= 0)
         {
@@ -97,12 +97,12 @@ class Generator
                 };
 
                 char randomNum = numbers[random.Next(0, numbers.Length - 1)];
-                sb.Append(type switch
+                sb.Append(stringType switch
                 {
                     StringType.Alphanumeric => random.Next(0, 2) == 0 ? randomNum : randomChar,
                     StringType.Numeric => randomNum,
                     StringType.Alphabetic => randomChar,
-                    _ => throw new ArgumentOutOfRangeException(nameof(type), "Invalid type specified.")
+                    _ => throw new ArgumentOutOfRangeException(nameof(stringType), "Invalid type specified.")
                 });
 
             }
