@@ -18,7 +18,7 @@ enum StringCase
 
 class Generator
 {
-    public static List<int> GenerateRandomNumbers(int count, int min = 0, int max = 9)
+    public static List<int> GenerateRandomNumbers(int count, int min = 0, int max = 9, bool unique = false)
     {
         if (count <= 0)
         {
@@ -35,13 +35,20 @@ class Generator
 
         for (int i = 0; i < count; i++)
         {
-            numbers.Add(random.Next(min, max));
+            int num = random.Next(min, max);
+            if (unique && numbers.Contains(num))
+            {
+                i--; // Decrement i to retry this position if the string is not unique
+                continue;
+
+            }
+            numbers.Add(num);
         }
 
         return numbers;
     }
 
-    public static List<float> GetRandomFloats(int count, float min = 0.0f, float max = 1.0f)
+    public static List<float> GetRandomFloats(int count, float min = 0.0f, float max = 1.0f, bool unique = false)
     {
         if (count <= 0)
         {
@@ -58,7 +65,14 @@ class Generator
 
         for (int i = 0; i < count; i++)
         {
-            numbers.Add((float)(random.NextDouble() * (max - min) + min));
+            float num = (float)(random.NextDouble() * (max - min) + min);
+            if (unique && numbers.Contains(num))
+            {
+                i--; // Decrement i to retry this position if the string is not unique
+                continue;
+
+            }
+            numbers.Add((float)(num));
         }
 
         return numbers;
@@ -117,10 +131,5 @@ class Generator
         }
 
         return strings;
-    }
-
-    public static List<string> GetRandomStrings(StringType type, int count, int length, bool unique = false)
-    {
-        return GetRandomStrings(type, StringCase.Lowercase, count, length, unique);
     }
 }

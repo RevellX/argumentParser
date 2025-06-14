@@ -1,4 +1,5 @@
-﻿using argumentParser.Classes;
+﻿using argumentParser.classes.actions.temp;
+using argumentParser.Classes;
 using argumentParser.Classes.Actions;
 using argumentParser.Classes.Utils;
 
@@ -18,11 +19,14 @@ public class Program
                 case "fibonacci":
                     new Fibonacci().Run();
                     break;
-                case "multithreading":
-                    new Multithreading().Run();
-                    break;
                 case "sorting":
                     new Sorting().Run();
+                    break;
+                case "generateData":
+                    new DataGenerator().Run();
+                    break;
+                case "multithreading":
+                    new Multithreading().Run();
                     break;
                 case "test":
                     TestMethod();
@@ -42,7 +46,7 @@ public class Program
     {
 
         string filePath = "input.txt";
-        var list = NumbersGenerator.GenerateRandomNumbers(1000000, 0, 100000);
+        var list = Generator.GenerateRandomNumbers(1000000, 0, 100000);
         // Write the list to a file
         File.WriteAllLines(filePath, list.Select(x => x.ToString()));
 
